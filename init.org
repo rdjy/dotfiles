@@ -1,0 +1,216 @@
+#+TITLE: My Emacs Init file
+
+* how to use this file?
+#+BEGIN_SRC emacs-lisp 
+(org-babel-tangle)
+#+END_SRC
+* package initialisation
+#+BEGIN_SRC emacs-lisp
+  (package-initialize)
+
+  (require 'use-package)
+#+END_SRC
+* start up
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  (setq inhibit-splash-screen t)
+  ;;(menu-bar-mode -1)
+  (add-to-list 'default-frame-alist '(alpha 100 95))
+
+  (set-face-attribute 'default nil :family "Monaco" :height 120 :weight 'normal)
+  (load-theme 'sanityinc-solarized-dark 1)
+
+  (display-time-mode t)
+#+END_SRC
+* interface
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-hl-line-mode t)
+(show-paren-mode t)
+;; (setq show-paren-style 'parenthesis)
+(line-number-mode 1)
+(column-number-mode 1)
+#+END_SRC
+* editing
+#+BEGIN_SRC emacs-lisp :tangle yes
+(setq-default
+ indent-tabs-mode nil
+ ;; ... and I prefer 4-space indents
+ tab-width 4)
+#+END_SRC
+* Org mode
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (require 'org-bullets)
+
+  (setq org-startup-indented t)
+  (setq org-indent-mode t)
+  (setq org-export-latex-listings t)
+  (setq org-src-fontify-natively t)
+  ;;;(setq org-default-notes-file (concat org-directory "/strut.org"))
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+  (global-set-key "\C-ca" 'org-agenda)
+
+  (setq org-log-done 'time)
+  (setq org-log-done 'note)
+  (setq org-todo-keywords
+             '((sequence "TODO(t)" "WORKING" "|" "DONE(d)")
+               (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")))
+
+  (define-key global-map "\C-cc" 'org-capture)
+
+  (require 'org-crypt)
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+  (setq org-crypt-key "4322A8E31735C171C3CE25528564D767E9704F56")
+  (setq auto-save-default nil)
+
+  ;; TODO
+  (setq org-capture-templates
+        '(("i" "Inbox" entry (file+headline "~/w/GTD/now.org" "Inbox")
+           "* %?\n  %i\n")))
+
+#+END_SRC
+* Git
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package magit
+    :bind (("C-c g" . magit-status))
+  )
+#+END_SRC
+
+* flyspell
+use M-$
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; check spelling
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  ;; (setq ispell-dictionary "british"
+  ;;       ispell-extra-args '() ;; TeX mode "-t"
+  ;;       ispell-silently-savep t)
+  (setq ispell-program-name "aspell")
+  (setq ispell-personal-dictionary "~/.emacs.d/ispell-dict") ;; add personal dictionary
+#+END_SRC
+* smart mode line
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package smart-mode-line
+    :init
+    (setq sml/no-confirm-load-theme t)
+    :config
+    (setq sml/theme 'respectful)
+    (add-to-list 'sml/replacer-regexp-list
+               '("^~/p/\\(\\w+\\)/"
+                 (lambda (s) (concat ":" (upcase (match-string 1 s)) ":")))
+               t)
+    (sml/setup))
+#+END_SRC
+* misc
+** my experiments
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;(setq custom-safe-themes t)
+  (setq dired-use-ls-dired nil)
+  (server-start)
+
+  (setq highlight-indent-guides-method 'character)
+  ;(setq highlight-indent-guides-responsive 'top)
+  ;; Indent character samples: | ┆ ┊
+  (setq highlight-indent-guides-character ?\┆)
+  ;(setq highlight-indent-guides-character ?\x2502)
+
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+
+  (desktop-save-mode 1)
+#+END_SRC
+
+not sure yet
+#+BEGIN_SRC emacs-lisp
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(cua-selection-mode 1)
+(use-package persp-mode
+    :config (persp-mode))
+
+#+END_SRC
+** backup files
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq
+     backup-by-copying t      ; don't clobber symlinks
+     backup-directory-alist
+      '(("." . "~/.saves/"))    ; don't litter my fs tree
+     delete-old-versions t
+     kept-new-versions 6
+     kept-old-versions 2
+     version-control t)       ; use versioned backups
+#+END_SRC
+** winner mode 
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :defer t)
+#+END_SRC
+
+** TODO custom?
+#+BEGIN_SRC emacs-lisp :tangle no
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(blink-cursor-mode nil)
+   '(custom-enabled-themes (quote (sanityinc-solarized-dark)))
+   '(custom-safe-themes
+     (quote
+      ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" default)))
+   '(epg-gpg-program "/usr/local/bin/gpg2")
+   '(org-agenda-files
+     (quote
+      ("~/w/GTD/fee.org" "~/w/GTD/now.org" "~/w/GTD/jobs.org")))
+   '(package-selected-packages
+     (quote
+      (all-the-icons-dired org-journal nixos-options nix-mode org haskell-mode neotree hcl-mode json-mode ansible yaml-mode org-bullets color-theme-solarized color-theme-sanityinc-solarized solarized-theme)))
+   '(tool-bar-mode nil))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+
+#+END_SRC
+** OSX
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
+
+(setq dired-use-ls-dired nil)
+
+;; we pretty much never ever want to background emacs
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x C-z"))
+
+(global-unset-key (kbd "C-x C-c"))
+#+END_SRC
+** eshell
+#+BEGIN_SRC emacs-lisp :tangle yes
+(global-set-key (kbd "C-c e") 'eshell)
+(defun eshell/e (file)
+ (find-file file))
+#+END_SRC
+** sidebar.el
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-to-list 'load-path "~/3//icons-in-terminal/") ;; If it's not already done
+  (add-to-list 'load-path "~/.emacs.d/dj/")
+  (require 'frame-local)
+  (add-to-list 'load-path "~/3/sidebar.el")
+  (require 'sidebar)
+  (global-set-key (kbd "C-x C-f") 'sidebar-open)
+  (global-set-key (kbd "C-x C-a") 'sidebar-buffers-open)
+#+END_SRC
+** direx
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'popwin)
+  (popwin-mode 1)
+
+  (push '(direx:direx-mode :position left :width 25 :dedicated t)
+          popwin:special-display-config)
+  (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
+#+END_SRC
