@@ -1,17 +1,19 @@
 #+TITLE: My Emacs Init file
+#+PROPERTY: header-args :tangle "~/.emacs.d/dj.el"
 
 * how to use this file?
-#+BEGIN_SRC emacs-lisp 
+c-v-t
+#+BEGIN_SRC emacs-lisp :tangle no
 (org-babel-tangle)
 #+END_SRC
 * package initialisation
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (package-initialize)
 
   (require 'use-package)
 #+END_SRC
 * start up
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
 
@@ -23,9 +25,14 @@
   (load-theme 'sanityinc-solarized-dark 1)
 
   (display-time-mode t)
+
+  ;; (setq-default indicate-empty-lines t)
+  ;; (setq-default line-spacing 3)
+  ;; (setq frame-title-format '("Emacs"))
+
 #+END_SRC
 * interface
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
 (global-hl-line-mode t)
 (show-paren-mode t)
 ;; (setq show-paren-style 'parenthesis)
@@ -33,24 +40,26 @@
 (column-number-mode 1)
 #+END_SRC
 * editing
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
 (setq-default
  indent-tabs-mode nil
  ;; ... and I prefer 4-space indents
  tab-width 4)
+
+(add-hook 'before-save-hook 'whitespace-cleanup)
 #+END_SRC
 * Org mode
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
 
   (require 'org-bullets)
 
   (setq org-startup-indented t)
-  (setq org-indent-mode t)
   (setq org-export-latex-listings t)
   (setq org-src-fontify-natively t)
   ;;;(setq org-default-notes-file (concat org-directory "/strut.org"))
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (add-hook 'org-mode-hook 'org-indent-mode)
 
   (global-set-key "\C-ca" 'org-agenda)
 
@@ -75,15 +84,16 @@
 
 #+END_SRC
 * Git
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
   (use-package magit
-    :bind (("C-c g" . magit-status))
+    :bind (("C-x g" . magit-status))
   )
 #+END_SRC
 
 * flyspell
 use M-$
-#+BEGIN_SRC emacs-lisp :tangle yes
+# this doesn't work very well
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; check spelling
   (add-hook 'text-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
@@ -94,7 +104,7 @@ use M-$
   (setq ispell-personal-dictionary "~/.emacs.d/ispell-dict") ;; add personal dictionary
 #+END_SRC
 * smart mode line
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
   (use-package smart-mode-line
     :init
     (setq sml/no-confirm-load-theme t)
@@ -108,7 +118,7 @@ use M-$
 #+END_SRC
 * misc
 ** my experiments
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
   ;(setq custom-safe-themes t)
   (setq dired-use-ls-dired nil)
   (server-start)
@@ -122,6 +132,11 @@ use M-$
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 
   (desktop-save-mode 1)
+
+  (use-package nlinum
+  :config
+  (add-hook 'prog-mode-hook 'nlinum-mode)
+  )
 #+END_SRC
 
 not sure yet
@@ -133,7 +148,7 @@ not sure yet
 
 #+END_SRC
 ** backup files
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
   (setq
      backup-by-copying t      ; don't clobber symlinks
      backup-directory-alist
@@ -178,7 +193,7 @@ not sure yet
 
 #+END_SRC
 ** OSX
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "s-<return>") 'toggle-frame-fullscreen)
 
 (setq dired-use-ls-dired nil)
@@ -190,10 +205,12 @@ not sure yet
 (global-unset-key (kbd "C-x C-c"))
 #+END_SRC
 ** eshell
-#+BEGIN_SRC emacs-lisp :tangle yes
-(global-set-key (kbd "C-c e") 'eshell)
-(defun eshell/e (file)
- (find-file file))
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c e") 'eshell)
+  (defun eshell/ee (file)
+   (find-file file))
+  (defun eshell/e (file)
+   (find-file-other-window file))
 #+END_SRC
 ** sidebar.el
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -206,11 +223,16 @@ not sure yet
   (global-set-key (kbd "C-x C-a") 'sidebar-buffers-open)
 #+END_SRC
 ** direx
-#+BEGIN_SRC emacs-lisp :tangle yes
+#+BEGIN_SRC emacs-lisp :tangle no
   (require 'popwin)
   (popwin-mode 1)
 
   (push '(direx:direx-mode :position left :width 25 :dedicated t)
           popwin:special-display-config)
   (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
+#+END_SRC
+** treemacs
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-0") 'treemacs-select-window)
+  (global-set-key (kbd "M-0") 'treemacs-select-window)
 #+END_SRC
