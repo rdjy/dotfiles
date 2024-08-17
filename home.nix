@@ -36,6 +36,9 @@
     # '')
     tmux
     jq yq-go
+    pass
+    qemu
+    # qrencode imagemagick
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -75,6 +78,12 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  programs.emacs = {
+    enable = true;
+  };
+  programs.gpg = {
+    enable = true;
+  };
   programs.git = {
     enable = true;
     userName = "Richard Yang";
@@ -85,6 +94,9 @@
       st = "status";
       br = "branch";
       };
+  };
+  programs.emacs = {
+    enable = true;
   };
   programs.alacritty = {
     enable = true;
@@ -107,7 +119,7 @@
       font.normal.family = "DejaVu Sans Mono";
       mouse.hide_when_typing = true;
       shell.program = "/bin/zsh";
-      shell.args = ["--login" "-c" "$HOME?.nix-profile/bin/tmux" "-u"];
+      shell.args = ["--login" "-c" "$HOME/.nix-profile/bin/tmux" "-u"];
       live_config_reload = true;
       # import = ["~/.config/alacritty/solarized_dark.toml"];
       colors.primary = {
