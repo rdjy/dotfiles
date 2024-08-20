@@ -80,9 +80,27 @@
   programs.home-manager.enable = true;
   programs.emacs = {
     enable = true;
+    extraPackages = epkgs: [
+      epkgs.yaml-mode
+      epkgs.color-theme-sanityinc-solarized
+    ];
   };
   programs.gpg = {
     enable = true;
+  };
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+    zion = {
+      host = "zion";
+      hostname = "192.168.1.230";
+      extraOptions = { 
+      controlPath = "~/.ssh/sock.zion";
+      controlMaster = "auto";
+      controlPersist = "10m";
+      };
+    };
+    };
   };
   programs.git = {
     enable = true;
@@ -94,9 +112,6 @@
       st = "status";
       br = "branch";
       };
-  };
-  programs.emacs = {
-    enable = true;
   };
   programs.alacritty = {
     enable = true;

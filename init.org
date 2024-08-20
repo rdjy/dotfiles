@@ -21,7 +21,7 @@ c-v-t
   ;;(menu-bar-mode -1)
   (add-to-list 'default-frame-alist '(alpha 100 95))
 
-  (set-face-attribute 'default nil :family "Monaco" :height 120 :weight 'normal)
+  (set-face-attribute 'default nil :family "Monaco" :height 130 :weight 'normal)
   (load-theme 'sanityinc-solarized-dark 1)
 
   (display-time-mode t)
@@ -158,7 +158,7 @@ not sure yet
      kept-old-versions 2
      version-control t)       ; use versioned backups
 #+END_SRC
-** winner mode 
+** winner mode
 #+BEGIN_SRC emacs-lisp
 (use-package winner
   :defer t)
