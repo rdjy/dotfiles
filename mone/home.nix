@@ -80,6 +80,9 @@
   programs.home-manager.enable = true;
   programs.emacs = {
     enable = true;
+    extraConfig = ''
+      (load-file "~/.emacs.d/dj.el")
+    '';
     extraPackages = epkgs: [
       epkgs.use-package
 
