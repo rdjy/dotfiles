@@ -1,0 +1,4 @@
+#+TITLE: mc
+
+* microsoft login doco
+** https://mojang-api-docs.gapple.pw/authentication/msa

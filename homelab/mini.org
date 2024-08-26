@@ -1,0 +1,11 @@
+#+TITLE: mac mini server
+
+* disks
+- sda2 :: active
+- sdb :: backup
+
+* partitions
+- @root
+- @home
+- @nix
+- @repo
