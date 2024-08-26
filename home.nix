@@ -81,8 +81,30 @@
   programs.emacs = {
     enable = true;
     extraPackages = epkgs: [
-      epkgs.yaml-mode
+      epkgs.use-package
+
+      epkgs.magit
+      epkgs.org
+
       epkgs.color-theme-sanityinc-solarized
+      epkgs.jetbrains-darcula-theme
+
+      epkgs.go-mode
+      epkgs.haskell-mode
+      epkgs.lua-mode
+      epkgs.nix-mode
+      epkgs.python-mode
+      epkgs.yaml-mode
+
+      epkgs.highlight-indent-guides
+      epkgs.neotree
+      epkgs.nlinum
+      epkgs.persp-mode
+      epkgs.projectile
+      epkgs.smart-mode-line
+      epkgs.pinentry
+
+      epkgs.org-bullets
     ];
   };
   programs.gpg = {
@@ -94,7 +116,7 @@
     zion = {
       host = "zion";
       hostname = "192.168.1.230";
-      extraOptions = { 
+      extraOptions = {
       controlPath = "~/.ssh/sock.zion";
       controlMaster = "auto";
       controlPersist = "10m";
